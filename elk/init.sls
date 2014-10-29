@@ -76,7 +76,7 @@ logstash_soft:
 
 kibana_static_dir:
   file.directory:
-    - name: {{ kibana_wwwroot }};
+    - name: {{ kibana_wwwroot }}
     - user: www-data
     - group: www-data
     - makedirs: True
