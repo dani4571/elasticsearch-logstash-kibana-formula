@@ -74,13 +74,6 @@ logstash_soft:
       - file: logstash_repo
       - pkg: elasticsearch
 
-kibana_static_dir:
-  file.directory:
-    - name: {{ kibana_wwwroot }}
-    - user: www-data
-    - group: www-data
-    - makedirs: True
-
 nginx_sites_dir:
   file.directory:
     - name: /etc/nginx/sites-enabled
@@ -168,6 +161,13 @@ kibana_config_js:
     - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
     - context:
        kibana_port: {{ kibana_port }}
+
+
+kibana_static_dir:
+  file.directory:
+    - name: {{ kibana_wwwroot }}
+    - user: www-data
+    - group: www-data
 
 # TODO:
 # * point config.js to port {{ kibana_port }} and not port 9200
