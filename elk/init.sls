@@ -118,6 +118,30 @@ logstash_service:
     - name: logstash
     - enable: True
 
+kibana:
+  archive.extracted:
+    - name: {{ kibana_wwwroot }}
+    - source: https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz
+    - source_hash: md5=210e66901b22304a2bada3305955b115
+    - archive_format: tar
+    - tar_options: xf
+
+kibana_config_js:
+  file.managed:
+    - name: '{{ kibana_wwwroot }}/config.js'
+    - template: jinja
+    - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
+    - context:
+       kibana_port: {{ kibana_port }}
+
+
+kibana_static_dir:
+  file.directory:
+    - name: {{ kibana_wwwroot }}
+    - user: www-data
+    - group: www-data
+
+
 nginx_static_site:
   pkg.installed:
     - name: nginx
@@ -145,29 +169,6 @@ nginx_static_site:
        server_name: {{ server_name }}
        kibana_wwwroot: {{ kibana_wwwroot }}
        elastic_htpasswd_file: {{ elastic_htpasswd_file }}
-
-kibana:
-  archive.extracted:
-    - name: {{ kibana_wwwroot }}
-    - source: https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz
-    - source_hash: md5=210e66901b22304a2bada3305955b115
-    - archive_format: tar
-    - tar_options: xf
-
-kibana_config_js:
-  file.managed:
-    - name: '{{ kibana_wwwroot }}/config.js'
-    - template: jinja
-    - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
-    - context:
-       kibana_port: {{ kibana_port }}
-
-
-kibana_static_dir:
-  file.directory:
-    - name: {{ kibana_wwwroot }}
-    - user: www-data
-    - group: www-data
 
 # TODO:
 # * point config.js to port {{ kibana_port }} and not port 9200
