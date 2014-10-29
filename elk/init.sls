@@ -124,7 +124,7 @@ kibana:
     - source: https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz
     - source_hash: md5=210e66901b22304a2bada3305955b115
     - archive_format: tar
-    - tar_options: xf
+    - tar_options: x
 
 kibana_config_js:
   file.managed:
