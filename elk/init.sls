@@ -86,14 +86,6 @@ nginx_sites_dir:
     - name: /etc/nginx/sites-enabled
     - makedirs: True
 
-kibana_config_js:
-  file.managed:
-    - name: '{{ kibana_wwwroot }}/config.js'
-    - template: jinja
-    - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
-    - context:
-       kibana_port: {{ kibana_port }}
-
 elastic_htpasswd:
   file.managed:
     - name: {{ elastic_htpasswd_file }}
@@ -168,6 +160,14 @@ kibana:
     - source_hash: md5=210e66901b22304a2bada3305955b115
     - archive_format: tar
     - tar_options: xf
+
+kibana_config_js:
+  file.managed:
+    - name: '{{ kibana_wwwroot }}/config.js'
+    - template: jinja
+    - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
+    - context:
+       kibana_port: {{ kibana_port }}
 
 # TODO:
 # * point config.js to port {{ kibana_port }} and not port 9200
