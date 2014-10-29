@@ -152,7 +152,7 @@ nginx_static_site:
 
   file.managed:
     - template: jinja
-    - source: salt://kibana/nginx_kibana_site
+    - source: salt://elasticsearch-logstash-kibana/elk/nginx_kibana_site
     - name: /etc/nginx/sites-enabled/kibana
     - mode: 644
     - context:
