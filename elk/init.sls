@@ -128,7 +128,7 @@ unzip_kibana:
     - name: tar -zxf kibana-3.0.1.tar.gz
     - cwd: /tmp
     - require:
-      - file: /tmp/kibana-3.0.1.tar.gz
+      - directory: /tmp/kibana-3.0.1.tar.gz
 
 mv_kibana:
   cmd.run:
