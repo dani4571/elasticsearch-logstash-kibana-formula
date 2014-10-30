@@ -128,13 +128,13 @@ unzip_kibana:
     - name: tar -zxf kibana-3.0.1.tar.gz
     - cwd: /tmp
     - require:
-      - directory: /tmp/kibana-3.0.1.tar.gz
+      - file: /tmp/kibana-3.0.1.tar.gz
 
 mv_kibana:
   cmd.run:
     - name: mv /tmp/kibana-3.0.1 {{ kibana_wwwroot }}
     - require:
-      - file: /tmp/kibana-3.0.1
+      - cmd: unzip_kibana
 
 kibana_config_js:
   file.managed:
