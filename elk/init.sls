@@ -118,17 +118,21 @@ logstash_service:
     - name: logstash
     - enable: True
 
-kibana:
-  archive.extracted:
-    - name: {{ kibana_wwwroot }}
+/tmp/kibana-3.0.1.tar.gz:
+  file.managed:
     - source: https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz
     - source_hash: md5=210e66901b22304a2bada3305955b115
-    - archive_format: tar
-    - tar_options: x
+
+unzip_kibana:
+  cmd.run:
+    - name: tar -zxf kibana-3.0.1.tar.gz -C {{ kibana_wwwroot }}
+    - cwd: /tmp
+    - require:
+      - file: /tmp/kibana-3.0.1.tar.gz
 
 kibana_config_js:
   file.managed:
-    - name: '{{ kibana_wwwroot }}/config.js'
+    - name: '{{ kibana_wwwroot }}config.js'
     - template: jinja
     - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
     - context:
