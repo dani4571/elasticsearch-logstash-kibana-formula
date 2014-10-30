@@ -142,7 +142,7 @@ unzip_kibana:
 
 mv_kibana:
   cmd.run:
-    - name: mv /tmp/kibana-3.0.1 {{ kibana_wwwroot }}
+    - name: mv -f /tmp/kibana-3.0.1 {{ kibana_wwwroot }}
     - require:
       - cmd: unzip_kibana
 
