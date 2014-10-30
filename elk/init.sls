@@ -117,6 +117,16 @@ logstash_service:
   service.running:
     - name: logstash
     - enable: True
+    - watch:
+      - file: /etc/logstash/conf.d/*
+
+/etc/logstash/conf.d/nginx_access.conf:
+  file.managed:
+    - template: jinja
+    - source: salt://elasticsearch-logstash-kibana-formula/files/logstash/nginx_access.conf
+    - mode: 644
+    - user: logstash
+    - group: logstash
 
 /tmp/kibana-3.0.1.tar.gz:
   file.managed:
@@ -180,5 +190,4 @@ nginx_static_site:
        kibana_wwwroot: {{ kibana_wwwroot }}
        elastic_htpasswd_file: {{ elastic_htpasswd_file }}
 
-# TODO:
-# * point config.js to port {{ kibana_port }} and not port 9200
+
