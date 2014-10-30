@@ -125,10 +125,16 @@ logstash_service:
 
 unzip_kibana:
   cmd.run:
-    - name: tar -zxf kibana-3.0.1.tar.gz -C {{ kibana_wwwroot }}
+    - name: tar -zxf kibana-3.0.1.tar.gz
     - cwd: /tmp
     - require:
       - file: /tmp/kibana-3.0.1.tar.gz
+
+mv_kibana:
+  cmd.run:
+    - name: mv /tmp/kibana-3.0.1 {{ kibana_wwwroot }}
+    - require:
+      - file: /tmp/kibana-3.0.1
 
 kibana_config_js:
   file.managed:
