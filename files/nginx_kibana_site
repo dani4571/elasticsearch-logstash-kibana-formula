@@ -26,7 +26,7 @@ server {
   '.*/_aliases',
   '_nodes',
   '.*/_search',
-  '.*/_mappin',
+  '.*/_mapping',
   'kibana-int/dashboard/.*',
   'kibana-int/temp.*',
   )
