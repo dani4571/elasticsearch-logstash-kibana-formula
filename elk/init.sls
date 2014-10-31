@@ -1,4 +1,7 @@
+{% set kibana_version = "3.0.1" %}
+{% set kibana_md5 = "210e66901b22304a2bada3305955b115" %}
 {% with repo_key_file = '/root/elastic_repo.key' %}
+
 elastic_repos_key:
   file.managed:
     - name: {{ repo_key_file }}
@@ -128,24 +131,29 @@ logstash_service:
     - user: logstash
     - group: logstash
 
-/tmp/kibana-3.0.1.tar.gz:
+# Get the kibana tarball
+/tmp/kibana-{{ kibana_version }}.tar.gz:
   file.managed:
-    - source: https://download.elasticsearch.org/kibana/kibana/kibana-3.0.1.tar.gz
-    - source_hash: md5=210e66901b22304a2bada3305955b115
-
+    - source: https://download.elasticsearch.org/kibana/kibana/kibana-{{ kibana_version }}.tar.gz
+    - source_hash: md5={{ kibana_md5 }}
 unzip_kibana:
   cmd.run:
-    - name: tar -zxf kibana-3.0.1.tar.gz
+    - name: tar -zxf kibana-{{ kibana_version }}.tar.gz
     - cwd: /tmp
     - require:
-      - file: /tmp/kibana-3.0.1.tar.gz
-
-mv_kibana:
+      - file: /tmp/kibana-{{ kibana_version }}.tar.gz
+kibana_static_dir:
+  file.directory:
+    - name: {{ kibana_wwwroot }}
+    - user: www-data
+    - group: www-data
+    - makedirs: True
+move_kibana_files:
   cmd.run:
-    - name: rm -rf {{ kibana_wwwroot }}; mv -f /tmp/kibana-3.0.1 {{ kibana_wwwroot }}
+    - name: mv kibana-{{ kibana_version }}/* {{ kibana_wwwroot }}
+    - cwd: /tmp
     - require:
       - cmd: unzip_kibana
-
 kibana_config_js:
   file.managed:
     - name: '{{ kibana_wwwroot }}config.js'
@@ -153,14 +161,6 @@ kibana_config_js:
     - source: salt://elasticsearch-logstash-kibana-formula/files/kibana/config.js
     - context:
        kibana_port: {{ kibana_port }}
-
-
-kibana_static_dir:
-  file.directory:
-    - name: {{ kibana_wwwroot }}
-    - user: www-data
-    - group: www-data
-
 
 nginx_static_site:
   pkg.installed:
